@@ -12,15 +12,19 @@ const inputElevation = document.querySelector(".form__input--elevation");
 class App {
   #map;
   #mapEvent;
+  #mapZoomLevel = 15;
   #workouts = [];
 
   constructor() {
     //Get user's current position
     this._getPosition();
+    //Get data from local storage
+    this._getLocalStorage();
 
     //Attach event handlers
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
+    containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
   }
 
   _getPosition() {
@@ -37,7 +41,7 @@ class App {
     const { latitude, longitude } = position.coords;
     const coords = [latitude, longitude];
 
-    this.#map = L.map("map").setView(coords, 15);
+    this.#map = L.map("map").setView(coords, this.#mapZoomLevel);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -45,6 +49,10 @@ class App {
 
     //Handling clicks on the map
     this.#map.on("click", this._showForm.bind(this));
+
+    this.#workouts.forEach((work) => {
+      this._renderWorkoutMarker(work);
+    });
   }
   _showForm(e) {
     this.#mapEvent = e;
@@ -58,9 +66,9 @@ class App {
   _newWorkout(e) {
     //Helper functions
     const validInputs = (...inputs) =>
-      inputs.every((inp) => !Number.isFinite(inp));
+      inputs.every((inp) => Number.isFinite(inp));
 
-    const allPostive = (...inputs) => inputs.every((inp) => inp > 0);
+    const allPostive = (...inputs) => inputs.every((inp) => inp >= 0);
 
     e.preventDefault();
 
@@ -92,6 +100,7 @@ class App {
         !allPostive(distance, duration, elevation)
       )
         return alert("Please enter valid inputs");
+
       workout = new Cycling(clickedCoords, distance, duration, elevation);
     }
 
@@ -106,6 +115,9 @@ class App {
 
     //Clear input fields and hide form
     this._hideForm();
+
+    //Set local storage to all workouts
+    this._setLocalStorage();
   }
   _renderWorkoutMarker(workout) {
     L.marker(workout.coords)
@@ -120,28 +132,29 @@ class App {
         })
       )
       .setPopupContent(
-        `${workout.type === "running" ? "🏃" : "🚴‍♀️"} ${this.description}`
+        `${workout.type === "running" ? "🏃" : "🚴‍♀️"} ${workout.description}`
       )
       .openPopup();
   }
   _renderWorkout(workout) {
     let workoutHtml = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
-          <h2 class="workout__title">${workout.description}</h2>
-          <div class="workout__details">
+        <h2 class="workout__title">${workout.description}</h2>
+        <div class="workout__details">
             <span class="workout__icon">${
               workout.type === "running" ? "🏃" : "🚴‍♀️"
             } </span>
             <span class="workout__value">${workout.distance}</span>
             <span class="workout__unit">km</span>
-          </div>
-          <div class="workout__details">
+        </div>
+        <div class="workout__details">
             <span class="workout__icon">⏱</span>
             <span class="workout__value">${workout.duration}</span>
             <span class="workout__unit">min</span>
-          </div>
-    </li>
+        </div>
+   
     `;
+
     if (workout.type === "running") {
       workoutHtml += `
           <div class="workout__details">
@@ -150,10 +163,11 @@ class App {
             <span class="workout__unit">min/km</span>
           </div>
           <div class="workout__details">
-            <span class="workout__icon">🦶🏼</span>
+            <span class="workout__icon">👟</span>
             <span class="workout__value">${workout.cadence}</span>
             <span class="workout__unit">spm</span>
           </div>
+        </li>
       `;
     }
     if (workout.type === "cycling") {
@@ -168,10 +182,14 @@ class App {
             <span class="workout__value">${workout.elevationGain}</span>
             <span class="workout__unit">m</span>
           </div>
+        </li>
       `;
     }
 
     form.insertAdjacentHTML("afterend", workoutHtml);
+  }
+  _removeWorkout(){
+
   }
   _hideForm() {
     //prettier-ignore
@@ -181,8 +199,36 @@ class App {
 
     setTimeout(() => (form.style.display = "grid"), 1000);
   }
-}
+  _moveToPopup(e) {
+    const workoutEl = e.target.closest(".workout");
+    if (!workoutEl) return;
+    const workout = this.#workouts.find(
+      (work) => work.id === workoutEl.dataset.id
+    );
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
+  }
+  _setLocalStorage() {
+    localStorage.setItem("workouts", JSON.stringify(this.#workouts));
+  }
+  _getLocalStorage() {
+    const workoutsData = JSON.parse(localStorage.getItem("workouts"));
+    if (!workoutsData) return;
+    this.#workouts = workoutsData;
 
+    this.#workouts.forEach((workout) => {
+      this._renderWorkout(workout);
+    });
+  }
+  _reset(){
+    localStorage.removeItem("workouts");
+    location.reload();
+  }
+}
 class Workout {
   date = new Date();
   id = (Date.now() + "").slice(-10);
@@ -198,13 +244,12 @@ class Workout {
     const months = ["January", "February", "March", "April", "May", "June", "July", 
     "August", "September", "October", "November","December",];
 
-    this.description = `${this.type[0].toUpperCase()} ${this.type.slice(
-      1
-    )} on ${months[this.date.getMonth()]} ${this.date.getDate()} `;
+    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
+      months[this.date.getMonth()]
+    } ${this.date.getDate()} `;
     return this.description;
   }
 }
-
 class Cycling extends Workout {
   type = "cycling";
   constructor(coords, distance, duration, elevationGain) {
@@ -219,7 +264,6 @@ class Cycling extends Workout {
     return this.speed;
   }
 }
-
 class Running extends Workout {
   type = "running";
   constructor(coords, distance, duration, cadence) {
@@ -234,4 +278,5 @@ class Running extends Workout {
     return this.pace;
   }
 }
+
 const app = new App();
