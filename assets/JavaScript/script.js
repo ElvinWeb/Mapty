@@ -14,13 +14,13 @@ class App {
   #mapEvent;
   #mapZoomLevel = 15;
   #workouts = [];
+  // #locationName;
 
   constructor() {
     //Get user's current position
     this._getPosition();
     //Get data from local storage
     this._getLocalStorage();
-
     //Attach event handlers
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
@@ -37,6 +37,7 @@ class App {
       );
     }
   }
+
   _loadMap(position) {
     const { latitude, longitude } = position.coords;
     const coords = [latitude, longitude];
@@ -108,10 +109,10 @@ class App {
     this.#workouts.push(workout);
 
     //Render workouts on map as marker
-    this._renderWorkoutMarker(workout);
+    this._renderWorkoutMarker(workout, location);
 
     //Render workout on the list
-    this._renderWorkout(workout);
+    this._renderWorkout(workout, location);
 
     //Clear input fields and hide form
     this._hideForm();
@@ -139,7 +140,13 @@ class App {
   _renderWorkout(workout) {
     let workoutHtml = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
-        <h2 class="workout__title">${workout.description}</h2>
+        <div class="workout__title">
+          <h4 class="workout__head">${workout.description}</h4>
+          <div class="workout__buttons">
+            <i class="fa-solid fa-pen-to-square workout__edit"></i>
+            <i class="fa-solid fa-trash workout__delete"></i>
+          </div>
+        </div>
         <div class="workout__details">
             <span class="workout__icon">${
               workout.type === "running" ? "🏃" : "🚴‍♀️"
@@ -152,7 +159,6 @@ class App {
             <span class="workout__value">${workout.duration}</span>
             <span class="workout__unit">min</span>
         </div>
-   
     `;
 
     if (workout.type === "running") {
@@ -188,8 +194,12 @@ class App {
 
     form.insertAdjacentHTML("afterend", workoutHtml);
   }
-  _removeWorkout(){
+  _removeWorkout(e) {
+    const workoutEl = e.target.closest(".workout");
 
+    const wantedWorkout = this.#workouts.find(
+      (work) => work.id === workoutEl.dataset.id
+    );
   }
   _hideForm() {
     //prettier-ignore
@@ -224,12 +234,13 @@ class App {
       this._renderWorkout(workout);
     });
   }
-  _reset(){
+  _reset() {
     localStorage.removeItem("workouts");
     location.reload();
   }
 }
 class Workout {
+  #api_key = "df6862e91d0eedbace79be57aa8f159f";
   date = new Date();
   id = (Date.now() + "").slice(-10);
 
@@ -247,7 +258,23 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()} `;
+
     return this.description;
+  }
+  _getLocation() {
+    let api_url = "http://api.positionstack.com/v1/reverse";
+    let strCoords = `${this.coords[0]},${this.coords[1]}`;
+    let request_url = `${api_url}?access_key=${
+      this.#api_key
+    }&query=${strCoords}`;
+
+    fetch(request_url)
+      .then((res) => res.json())
+      .then((data) => {
+        this.locationName = data.data[0].name;
+        console.log(this.locationName);
+      });
+    return this.locationName;
   }
 }
 class Cycling extends Workout {
@@ -257,6 +284,7 @@ class Cycling extends Workout {
     this.elevationGain = elevationGain;
     this.calcSpeed();
     this._setDescription();
+    this._getLocation();
   }
 
   calcSpeed() {
@@ -271,6 +299,7 @@ class Running extends Workout {
     this.cadence = cadence;
     this.calcPace();
     this._setDescription();
+    this._getLocation();
   }
 
   calcPace() {
@@ -280,3 +309,5 @@ class Running extends Workout {
 }
 
 const app = new App();
+
+console.log(app);

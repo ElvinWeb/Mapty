@@ -77,6 +77,7 @@ a:visited {
 }
 
 .workout {
+  position: relative;
   background-color: var(--color-dark--2);
   border-radius: 5px;
   padding: 1.5rem 2.25rem;
@@ -85,6 +86,7 @@ a:visited {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0.75rem 1.5rem;
+  box-shadow: var(--box-shadow-1);
 }
 .workout--running {
   border-left: 5px solid var(--color-brand--2);
@@ -92,13 +94,29 @@ a:visited {
 .workout--cycling {
   border-left: 5px solid var(--color-brand--1);
 }
-
+.workout__header {
+  display: grid;
+}
 .workout__title {
   font-size: 1.7rem;
   font-weight: 600;
   grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-
+.workout__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.workout__buttons .workout__edit{
+  color: #ffb545;
+}
+.workout__buttons .workout__delete{
+  color: #B80000;
+}
 .workout__details {
   display: flex;
   align-items: baseline;
