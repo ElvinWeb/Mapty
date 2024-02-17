@@ -2,6 +2,7 @@
 
 const form = document.querySelector(".form");
 const containerWorkouts = document.querySelector(".workouts");
+const deleteAllButton = document.querySelector(".delete__all--btn");
 const inputType = document.querySelector(".form__input--type");
 const inputDistance = document.querySelector(".form__input--distance");
 const inputDuration = document.querySelector(".form__input--duration");
@@ -12,19 +13,33 @@ const inputElevation = document.querySelector(".form__input--elevation");
 class App {
   #map;
   #mapEvent;
-  #mapZoomLevel = 15;
+  #mapZoomLevel = 14;
   #workouts = [];
-  // #locationName;
 
   constructor() {
+    this.workoutMarkers = {};
     //Get user's current position
     this._getPosition();
     //Get data from local storage
     this._getLocalStorage();
+    //Delete all button visibility
+    this._deleteAllButtonVisibility();
     //Attach event handlers
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
+    deleteAllButton.addEventListener(
+      "click",
+      this._removeAllWorkouts.bind(this)
+    );
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
+    containerWorkouts.addEventListener(
+      "click",
+      function (e) {
+        if (e.target.classList.contains("workout__delete--btn")) {
+          this._removeWorkout(e);
+        }
+      }.bind(this)
+    );
   }
 
   _getPosition() {
@@ -121,7 +136,7 @@ class App {
     this._setLocalStorage();
   }
   _renderWorkoutMarker(workout) {
-    L.marker(workout.coords)
+    const workoutMarker = L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -136,6 +151,8 @@ class App {
         `${workout.type === "running" ? "🏃" : "🚴‍♀️"} ${workout.description}`
       )
       .openPopup();
+
+    this.workoutMarkers[workout.id] = workoutMarker;
   }
   _renderWorkout(workout) {
     let workoutHtml = `
@@ -143,8 +160,12 @@ class App {
         <div class="workout__title">
           <h4 class="workout__head">${workout.description}</h4>
           <div class="workout__buttons">
-            <i class="fa-solid fa-pen-to-square workout__edit"></i>
-            <i class="fa-solid fa-trash workout__delete"></i>
+              <button class="workout__edit">
+                <i class="fa-solid fa-pen-to-square workout__edit--btn"></i>
+              </button>
+              <button class="workout__delete"> 
+                <i class="fa-solid fa-trash workout__delete--btn"></i>
+              </button>
           </div>
         </div>
         <div class="workout__details">
@@ -195,11 +216,59 @@ class App {
     form.insertAdjacentHTML("afterend", workoutHtml);
   }
   _removeWorkout(e) {
-    const workoutEl = e.target.closest(".workout");
+    const workoutElement = e.target.closest(".workout");
+    const workoutId = workoutElement.dataset.id;
+    if (!workoutElement) return;
 
-    const wantedWorkout = this.#workouts.find(
-      (work) => work.id === workoutEl.dataset.id
+    const wantedIndex = this.#workouts.findIndex(
+      (work) => work.id === workoutId
     );
+    //Remove workout from array
+    this.#workouts.splice(wantedIndex, 1);
+    //Remove workout from UI
+    workoutElement.remove();
+    //Remove workout marker on the map
+    this._removeWorkoutMarker(workoutId);
+    //Update changes in local storage
+    this._setLocalStorage();
+    //Point Delete all button visibility
+    this._deleteAllButtonVisibility();
+  }
+  _removeWorkoutMarker(workoutId) {
+    const workoutMarker = this.workoutMarkers[workoutId];
+
+    //Remove workout marker on the map and from the workoutMarkers object
+    if (workoutMarker) {
+      workoutMarker.remove();
+      delete this.workoutMarkers[workoutId];
+    }
+  }
+  _removeAllWorkouts() {
+    if (confirm("Are you sure you want to delete all workouts?")) {
+      //Clear the workouts array
+      this.#workouts = [];
+      //Remove all workout markers on the map
+      for (const id in this.workoutMarkers) {
+        this._removeWorkoutMarker(id);
+      }
+      //Clear the local storage
+      this._setLocalStorage();
+      //Remove all workout elements from the UI
+      const workoutElements = document.querySelectorAll(".workout");
+      workoutElements.forEach((workout) => workout.remove());
+
+      //Point Delete all button visibility
+      this._deleteAllButtonVisibility();
+    } else {
+      console.log("Cancelled.");
+    }
+  }
+  _deleteAllButtonVisibility() {
+    if (this.#workouts.length >= 2) {
+      deleteAllButton.classList.add("show"); // Show the button
+    } else {
+      deleteAllButton.classList.remove("show"); // Hide the button
+    }
   }
   _hideForm() {
     //prettier-ignore
