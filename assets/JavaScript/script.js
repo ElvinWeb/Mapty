@@ -15,6 +15,7 @@ class App {
   #mapEvent;
   #mapZoomLevel = 14;
   #workouts = [];
+  #editWorkout;
 
   constructor() {
     this.workoutMarkers = {};
@@ -38,6 +39,9 @@ class App {
         if (e.target.classList.contains("workout__delete--btn")) {
           this._removeWorkout(e);
         }
+        if (e.target.classList.contains("workout__edit--btn")) {
+          this._editWorkout(e);
+        }
       }.bind(this)
     );
   }
@@ -52,7 +56,6 @@ class App {
       );
     }
   }
-
   _loadMap(position) {
     const { latitude, longitude } = position.coords;
     const coords = [latitude, longitude];
@@ -119,21 +122,27 @@ class App {
 
       workout = new Cycling(clickedCoords, distance, duration, elevation);
     }
+    if (this.#editWorkout) {
+      this._updateWorkout();
+    } else {
+      //Add new object to workout array
+      this.#workouts.push(workout);
 
-    //Add new object to workout array
-    this.#workouts.push(workout);
+      //Render workouts on map as marker
+      this._renderWorkoutMarker(workout, location);
 
-    //Render workouts on map as marker
-    this._renderWorkoutMarker(workout, location);
+      //Render workout on the list
+      this._renderWorkout(workout, location);
 
-    //Render workout on the list
-    this._renderWorkout(workout, location);
+      //Clear input fields and hide form
+      this._hideForm();
 
-    //Clear input fields and hide form
-    this._hideForm();
+      //Set local storage to all workouts
+      this._setLocalStorage();
 
-    //Set local storage to all workouts
-    this._setLocalStorage();
+      //Delete all button visibility
+      this._deleteAllButtonVisibility();
+    }
   }
   _renderWorkoutMarker(workout) {
     const workoutMarker = L.marker(workout.coords)
@@ -231,7 +240,7 @@ class App {
     this._removeWorkoutMarker(workoutId);
     //Update changes in local storage
     this._setLocalStorage();
-    //Point Delete all button visibility
+    //Delete all button visibility
     this._deleteAllButtonVisibility();
   }
   _removeWorkoutMarker(workoutId) {
@@ -265,10 +274,97 @@ class App {
   }
   _deleteAllButtonVisibility() {
     if (this.#workouts.length >= 2) {
-      deleteAllButton.classList.add("show"); // Show the button
+      deleteAllButton.style.display = "block"; // Show the button
     } else {
-      deleteAllButton.classList.remove("show"); // Hide the button
+      deleteAllButton.style.display = "none"; // Hide the button
     }
+  }
+  _editWorkout(e) {
+    e.preventDefault();
+
+    const workoutElement = e.target.closest(".workout");
+    const workoutId = workoutElement.dataset.id;
+    if (!workoutElement) return;
+    const wantedIndex = this.#workouts.findIndex(
+      (work) => work.id === workoutId
+    );
+    const wantedWorkout = this.#workouts[wantedIndex];
+
+    inputType.value = wantedWorkout.type;
+    inputDistance.value = wantedWorkout.distance;
+    inputDuration.value = wantedWorkout.duration;
+
+    if (wantedWorkout.type === "running") {
+      inputElevation.value = "";
+      inputCadence.value = wantedWorkout.cadence;
+    } else if (wantedWorkout.type === "cycling") {
+      inputElevation.value = wantedWorkout.elevationGain;
+      inputCadence.value = "";
+    }
+
+    // Set the edited workout as the current edit workout
+    this.#editWorkout = wantedWorkout;
+
+    //Show the form
+    form.classList.remove("hidden");
+    inputDistance.focus();
+  }
+  _updateWorkout() {
+    if (!this.#editWorkout) {
+      console.error("No workout to update.");
+      return;
+    }
+    if (!this.#mapEvent || !this.#mapEvent.latlng) {
+      console.error("Map event or latlng is undefined");
+      return;
+    }
+
+    const editedWorkoutId = this.#editWorkout.id;
+    const workoutIndex = this.#workouts.findIndex(
+      (work) => work.id === editedWorkoutId
+    );
+    if (workoutIndex === -1) {
+      console.error("Workout not found.");
+      return;
+    }
+    //Setting the new workout values to the updated workout
+    const typeValue = inputType.value;
+    const distanceValue = +inputDistance.value;
+    const durationValue = +inputDuration.value;
+    const coordsValue = this.#mapEvent.latlng;
+
+    this.#workouts[workoutIndex].type = typeValue;
+    this.#workouts[workoutIndex].distance = distanceValue;
+    this.#workouts[workoutIndex].duration = durationValue;
+    this.#workouts[workoutIndex].coords = coordsValue;
+
+    if (typeValue === "running") {
+      const cadenceValue = +inputCadence.value;
+      this.#workouts[workoutIndex].cadence = cadenceValue;
+    } else if (typeValue === "cycling") {
+      const elevationValue = +inputElevation.value;
+      this.#workouts[workoutIndex].elevationGain = elevationValue;
+    }
+
+    //Update the workout in the list
+    this._removeWorkoutMarker(editedWorkoutId);
+    this._renderWorkoutMarker(this.#workouts[workoutIndex]);
+    const workoutElement = document.querySelector(
+      `[data-id="${editedWorkoutId}"]`
+    );
+    if (workoutElement) {
+      workoutElement.remove();
+    }
+    this._renderWorkout(this.#workouts[workoutIndex]);
+
+    //Hide the form
+    this._hideForm();
+
+    //Update local storage with the updated workouts
+    this._setLocalStorage();
+
+    //Clear the edit workout flag
+    this.#editWorkout = null;
   }
   _hideForm() {
     //prettier-ignore
@@ -341,7 +437,6 @@ class Workout {
       .then((res) => res.json())
       .then((data) => {
         this.locationName = data.data[0].name;
-        console.log(this.locationName);
       });
     return this.locationName;
   }
