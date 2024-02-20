@@ -26,7 +26,30 @@ class App {
     //Delete all button visibility
     this._deleteAllButtonVisibility();
     //Attach event handlers
-    form.addEventListener("submit", this._newWorkout.bind(this));
+    form.addEventListener(
+      "submit",
+      function (e) {
+        this._newWorkout(e);
+        toastr["success"]("New Workout has been created successfully");
+        toastr.options = {
+          closeButton: false,
+          debug: false,
+          newestOnTop: false,
+          progressBar: true,
+          positionClass: "toast-top-right",
+          preventDuplicates: false,
+          onclick: null,
+          showDuration: "300",
+          hideDuration: "1000",
+          timeOut: "5000",
+          extendedTimeOut: "1000",
+          showEasing: "swing",
+          hideEasing: "linear",
+          showMethod: "fadeIn",
+          hideMethod: "fadeOut",
+        };
+      }.bind(this)
+    );
     inputType.addEventListener("change", this._toggleElevationField);
     deleteAllButton.addEventListener(
       "click",
@@ -38,20 +61,72 @@ class App {
       function (e) {
         if (e.target.classList.contains("workout__delete--btn")) {
           this._removeWorkout(e);
+          toastr["error"]("Workout has deleted!");
+          toastr.options = {
+            closeButton: false,
+            debug: false,
+            newestOnTop: false,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            preventDuplicates: false,
+            onclick: null,
+            showDuration: "300",
+            hideDuration: "1000",
+            timeOut: "5000",
+            extendedTimeOut: "1000",
+            showEasing: "swing",
+            hideEasing: "linear",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+          };
         }
         if (e.target.classList.contains("workout__edit--btn")) {
           this._editWorkout(e);
+          toastr["info"]("Workout has updated!");
+          // toastr.options = {
+          //   closeButton: false,
+          //   debug: false,
+          //   newestOnTop: false,
+          //   progressBar: true,
+          //   positionClass: "toast-top-right",
+          //   preventDuplicates: false,
+          //   onclick: null,
+          //   showDuration: "300",
+          //   hideDuration: "1000",
+          //   timeOut: "5000",
+          //   extendedTimeOut: "1000",
+          //   showEasing: "swing",
+          //   hideEasing: "linear",
+          //   showMethod: "fadeIn",
+          //   hideMethod: "fadeOut",
+          // };
         }
       }.bind(this)
     );
   }
-
   _getPosition() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         this._loadMap.bind(this),
         function () {
-          alert("Error!");
+          toastr["error"]("Couldn't get your current position!!");
+          toastr.options = {
+            closeButton: false,
+            debug: false,
+            newestOnTop: false,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            preventDuplicates: false,
+            onclick: null,
+            showDuration: "300",
+            hideDuration: "1000",
+            timeOut: "5000",
+            extendedTimeOut: "1000",
+            showEasing: "swing",
+            hideEasing: "linear",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+          };
         }
       );
     }
@@ -88,7 +163,6 @@ class App {
       inputs.every((inp) => Number.isFinite(inp));
 
     const allPostive = (...inputs) => inputs.every((inp) => inp >= 0);
-
     e.preventDefault();
 
     //Get data from the form
@@ -124,6 +198,25 @@ class App {
     }
     if (this.#editWorkout) {
       this._updateWorkout();
+
+      toastr["info"]("Workout has updated!");
+      toastr.options = {
+        closeButton: false,
+        debug: false,
+        newestOnTop: false,
+        progressBar: true,
+        positionClass: "toast-top-right",
+        preventDuplicates: false,
+        onclick: null,
+        showDuration: "300",
+        hideDuration: "1000",
+        timeOut: "5000",
+        extendedTimeOut: "1000",
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut",
+      };
     } else {
       //Add new object to workout array
       this.#workouts.push(workout);
@@ -471,7 +564,6 @@ class Running extends Workout {
     return this.pace;
   }
 }
-
 const app = new App();
 
 console.log(app);
