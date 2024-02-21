@@ -82,24 +82,6 @@ class App {
         }
         if (e.target.classList.contains("workout__edit--btn")) {
           this._editWorkout(e);
-          toastr["info"]("Workout has updated!");
-          // toastr.options = {
-          //   closeButton: false,
-          //   debug: false,
-          //   newestOnTop: false,
-          //   progressBar: true,
-          //   positionClass: "toast-top-right",
-          //   preventDuplicates: false,
-          //   onclick: null,
-          //   showDuration: "300",
-          //   hideDuration: "1000",
-          //   timeOut: "5000",
-          //   extendedTimeOut: "1000",
-          //   showEasing: "swing",
-          //   hideEasing: "linear",
-          //   showMethod: "fadeIn",
-          //   hideMethod: "fadeOut",
-          // };
         }
       }.bind(this)
     );
@@ -164,41 +146,8 @@ class App {
 
     const allPostive = (...inputs) => inputs.every((inp) => inp >= 0);
     e.preventDefault();
-
-    //Get data from the form
-    const type = inputType.value;
-    const distance = +inputDistance.value;
-    const duration = +inputDuration.value;
-    const { lat, lng } = this.#mapEvent.latlng;
-    const clickedCoords = [lat, lng];
-    let workout;
-
-    //If workout running, create the running object
-    if (type === "running") {
-      const cadence = +inputCadence.value;
-      if (
-        !validInputs(distance, duration, cadence) ||
-        !allPostive(distance, duration, cadence)
-      )
-        return alert("Please enter valid inputs");
-
-      workout = new Running(clickedCoords, distance, duration, cadence);
-    }
-    //If workout cycling, create the cycling object
-    if (type === "cycling") {
-      const elevation = +inputElevation.value;
-
-      if (
-        !validInputs(distance, duration, elevation) ||
-        !allPostive(distance, duration, elevation)
-      )
-        return alert("Please enter valid inputs");
-
-      workout = new Cycling(clickedCoords, distance, duration, elevation);
-    }
     if (this.#editWorkout) {
       this._updateWorkout();
-
       toastr["info"]("Workout has updated!");
       toastr.options = {
         closeButton: false,
@@ -218,6 +167,36 @@ class App {
         hideMethod: "fadeOut",
       };
     } else {
+      //Get data from the form
+      const type = inputType.value;
+      const distance = +inputDistance.value;
+      const duration = +inputDuration.value;
+      const { lat, lng } = this.#mapEvent.latlng;
+      const clickedCoords = [lat, lng];
+      let workout;
+      //If workout running, create the running object
+      if (type === "running") {
+        const cadence = +inputCadence.value;
+        if (
+          !validInputs(distance, duration, cadence) ||
+          !allPostive(distance, duration, cadence)
+        )
+          return alert("Please enter valid inputs");
+
+        workout = new Running(clickedCoords, distance, duration, cadence);
+      }
+      //If workout cycling, create the cycling object
+      if (type === "cycling") {
+        const elevation = +inputElevation.value;
+
+        if (
+          !validInputs(distance, duration, elevation) ||
+          !allPostive(distance, duration, elevation)
+        )
+          return alert("Please enter valid inputs");
+
+        workout = new Cycling(clickedCoords, distance, duration, elevation);
+      }
       //Add new object to workout array
       this.#workouts.push(workout);
 
@@ -377,6 +356,7 @@ class App {
 
     const workoutElement = e.target.closest(".workout");
     const workoutId = workoutElement.dataset.id;
+
     if (!workoutElement) return;
     const wantedIndex = this.#workouts.findIndex(
       (work) => work.id === workoutId
@@ -390,9 +370,15 @@ class App {
     if (wantedWorkout.type === "running") {
       inputElevation.value = "";
       inputCadence.value = wantedWorkout.cadence;
+      inputElevation.closest(".form__row").classList.add("form__row--hidden");
+      inputCadence.closest(".form__row").classList.remove("form__row--hidden");
     } else if (wantedWorkout.type === "cycling") {
-      inputElevation.value = wantedWorkout.elevationGain;
       inputCadence.value = "";
+      inputElevation.value = wantedWorkout.elevationGain;
+      inputCadence.closest(".form__row").classList.add("form__row--hidden");
+      inputElevation
+        .closest(".form__row")
+        .classList.remove("form__row--hidden");
     }
 
     // Set the edited workout as the current edit workout
@@ -404,13 +390,13 @@ class App {
   }
   _updateWorkout() {
     if (!this.#editWorkout) {
-      console.error("No workout to update.");
+      alert("No workout to update.");
       return;
     }
-    if (!this.#mapEvent || !this.#mapEvent.latlng) {
-      console.error("Map event or latlng is undefined");
-      return;
-    }
+    // if (!this.#mapEvent || !this.#mapEvent.latlng) {
+    //   alert("Map event or latlng is undefined");
+    //   return;
+    // }
 
     const editedWorkoutId = this.#editWorkout.id;
     const workoutIndex = this.#workouts.findIndex(
@@ -424,22 +410,18 @@ class App {
     const typeValue = inputType.value;
     const distanceValue = +inputDistance.value;
     const durationValue = +inputDuration.value;
-    const coordsValue = this.#mapEvent.latlng;
 
     this.#workouts[workoutIndex].type = typeValue;
     this.#workouts[workoutIndex].distance = distanceValue;
     this.#workouts[workoutIndex].duration = durationValue;
-    this.#workouts[workoutIndex].coords = coordsValue;
 
     if (typeValue === "running") {
-      const cadenceValue = +inputCadence.value;
-      this.#workouts[workoutIndex].cadence = cadenceValue;
+      this.#workouts[workoutIndex].cadence = +inputCadence.value;
     } else if (typeValue === "cycling") {
-      const elevationValue = +inputElevation.value;
-      this.#workouts[workoutIndex].elevationGain = elevationValue;
+      this.#workouts[workoutIndex].elevationGain = +inputElevation.value;
     }
 
-    //Update the workout in the list
+    //Update the workout in the list and on the map
     this._removeWorkoutMarker(editedWorkoutId);
     this._renderWorkoutMarker(this.#workouts[workoutIndex]);
     const workoutElement = document.querySelector(
