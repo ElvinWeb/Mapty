@@ -30,24 +30,6 @@ class App {
       "submit",
       function (e) {
         this._newWorkout(e);
-        toastr["success"]("New Workout has been created successfully");
-        toastr.options = {
-          closeButton: false,
-          debug: false,
-          newestOnTop: false,
-          progressBar: true,
-          positionClass: "toast-top-right",
-          preventDuplicates: false,
-          onclick: null,
-          showDuration: "300",
-          hideDuration: "1000",
-          timeOut: "5000",
-          extendedTimeOut: "1000",
-          showEasing: "swing",
-          hideEasing: "linear",
-          showMethod: "fadeIn",
-          hideMethod: "fadeOut",
-        };
       }.bind(this)
     );
     inputType.addEventListener("change", this._toggleElevationField);
@@ -61,24 +43,6 @@ class App {
       function (e) {
         if (e.target.classList.contains("workout__delete--btn")) {
           this._removeWorkout(e);
-          toastr["error"]("Workout has deleted!");
-          toastr.options = {
-            closeButton: false,
-            debug: false,
-            newestOnTop: false,
-            progressBar: true,
-            positionClass: "toast-top-right",
-            preventDuplicates: false,
-            onclick: null,
-            showDuration: "300",
-            hideDuration: "1000",
-            timeOut: "5000",
-            extendedTimeOut: "1000",
-            showEasing: "swing",
-            hideEasing: "linear",
-            showMethod: "fadeIn",
-            hideMethod: "fadeOut",
-          };
         }
         if (e.target.classList.contains("workout__edit--btn")) {
           this._editWorkout(e);
@@ -140,32 +104,16 @@ class App {
     inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
   }
   _newWorkout(e) {
+    e.preventDefault();
+
     //Helper functions
     const validInputs = (...inputs) =>
       inputs.every((inp) => Number.isFinite(inp));
-
     const allPostive = (...inputs) => inputs.every((inp) => inp >= 0);
-    e.preventDefault();
+
     if (this.#editWorkout) {
       this._updateWorkout();
-      toastr["info"]("Workout has updated!");
-      toastr.options = {
-        closeButton: false,
-        debug: false,
-        newestOnTop: false,
-        progressBar: true,
-        positionClass: "toast-top-right",
-        preventDuplicates: false,
-        onclick: null,
-        showDuration: "300",
-        hideDuration: "1000",
-        timeOut: "5000",
-        extendedTimeOut: "1000",
-        showEasing: "swing",
-        hideEasing: "linear",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-      };
+      this._infoNotification();
     } else {
       //Get data from the form
       const type = inputType.value;
@@ -209,12 +157,74 @@ class App {
       //Clear input fields and hide form
       this._hideForm();
 
+      this._successNotification();
+
       //Set local storage to all workouts
       this._setLocalStorage();
 
       //Delete all button visibility
       this._deleteAllButtonVisibility();
     }
+  }
+  _successNotification() {
+    toastr["success"]("New Workout has been created successfully");
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: true,
+      positionClass: "toast-top-right",
+      preventDuplicates: false,
+      onclick: null,
+      showDuration: "300",
+      hideDuration: "1000",
+      timeOut: "5000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+  }
+  _infoNotification() {
+    toastr["info"]("Workout has updated!");
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: true,
+      positionClass: "toast-top-right",
+      preventDuplicates: false,
+      onclick: null,
+      showDuration: "300",
+      hideDuration: "1000",
+      timeOut: "5000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+  }
+  _errorNotification() {
+    toastr["error"]("Workout has deleted!");
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: true,
+      positionClass: "toast-top-right",
+      preventDuplicates: false,
+      onclick: null,
+      showDuration: "300",
+      hideDuration: "1000",
+      timeOut: "5000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
   }
   _renderWorkoutMarker(workout) {
     const workoutMarker = L.marker(workout.coords)
@@ -310,6 +320,8 @@ class App {
     workoutElement.remove();
     //Remove workout marker on the map
     this._removeWorkoutMarker(workoutId);
+
+    this._errorNotification();
     //Update changes in local storage
     this._setLocalStorage();
     //Delete all button visibility
@@ -325,24 +337,37 @@ class App {
     }
   }
   _removeAllWorkouts() {
-    if (confirm("Are you sure you want to delete all workouts?")) {
-      //Clear the workouts array
-      this.#workouts = [];
-      //Remove all workout markers on the map
-      for (const id in this.workoutMarkers) {
-        this._removeWorkoutMarker(id);
-      }
-      //Clear the local storage
-      this._setLocalStorage();
-      //Remove all workout elements from the UI
-      const workoutElements = document.querySelectorAll(".workout");
-      workoutElements.forEach((workout) => workout.remove());
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete all!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //Clear the workouts array
+        this.#workouts = [];
+        //Remove all workout markers on the map
+        for (const id in this.workoutMarkers) {
+          this._removeWorkoutMarker(id);
+        }
+        //Remove all workout elements from the UI
+        const workoutElements = document.querySelectorAll(".workout");
+        workoutElements.forEach((workout) => workout.remove());
+        //Clear the local storage
+        this._setLocalStorage();
+        //Point Delete all button visibility
+        this._deleteAllButtonVisibility();
 
-      //Point Delete all button visibility
-      this._deleteAllButtonVisibility();
-    } else {
-      console.log("Cancelled.");
-    }
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your all workouts has been deleted.",
+          icon: "success",
+        });
+      }
+    });
   }
   _deleteAllButtonVisibility() {
     if (this.#workouts.length >= 2) {
@@ -393,10 +418,6 @@ class App {
       alert("No workout to update.");
       return;
     }
-    // if (!this.#mapEvent || !this.#mapEvent.latlng) {
-    //   alert("Map event or latlng is undefined");
-    //   return;
-    // }
 
     const editedWorkoutId = this.#editWorkout.id;
     const workoutIndex = this.#workouts.findIndex(
