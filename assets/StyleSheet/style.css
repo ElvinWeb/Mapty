@@ -29,7 +29,7 @@ button {
 }
 
 html {
-  font-size: 80%;
+  font-size: 65%;
   box-sizing: border-box;
 }
 
@@ -55,6 +55,7 @@ a:visited {
   display: flex;
   flex-direction: row;
   box-shadow: var(--box-shadow-2);
+  position: relative;
 }
 /*--------- SIDEBAR --------*/
 .sidebar {
@@ -276,12 +277,10 @@ a:visited {
 
 /*----------- Toastr notification -------------*/
 .toast_container {
-  font-family: "Poppins", sans-serif;
   padding: 3rem;
   margin: 0 auto;
   width: 700px;
   height: 500px;
-  /*  border-radius:0.5rem;*/
   background-color: #eff2fb;
 }
 h1 {
@@ -337,11 +336,8 @@ p {
   width: 400px;
   line-height: 1.5rem;
   text-align: center;
-  /*        display:flex;
-  justify-content:center;
-  align-items:center;*/
   margin: 0 auto;
-  font-size: 0.825rem;
+  font-size: 1.5rem;
   margin-bottom: 2rem;
 }
 
@@ -352,7 +348,7 @@ p {
 .toast-error {
   width: 400px !important;
   font-family: "Poppins", sans-serif;
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   border-radius: 1rem !important;
   background-color: #edf1fd;
   color: #01081e !important;
@@ -385,7 +381,9 @@ p {
 #toast-container > .toast-error {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIlSURBVHgB3VbBbtNAEH2zTugFFIPgwAlzA4mK8AdrvgC+APiSKl/S9AvoH8SfEEQP3PCNAwjcA6IQeYcdYxtvbK/jNr30SVG86519npk3swvcdNCuC7880dF0Ck1QzxVMKHMGKmOYD5sNkoefknSXfQYJvz7TekJ0xIAe2CjJwSf3PybLgXXd+BzpcHZHHQP8CiPAoOWfjVn0edxJKOE7mNLKPka4HNLfG467SOkayGpSCvjF3XWSNSfV9qpbU3W0BzJBxLmkxIXj4bdD/VaBjrFH5Mzxg7MkqcaOhwHwBuOR+V4GVuHNcU0oubMK032GNh+P5Wdjsq4nGet6vh/619OXj1qEUtQeI/EiswJISXFckArZhGMRxcUFvPhJJm4REmPusQnZ0OrHXIdCIKQVmdTrwYTee2xBStV7T/7PIvQZWY/mJWlcSb1oDrdtCZH3Y6HIzOpnjIFxh2E4eofGcvarrZkz8awZXkdIXd/J6rxFyH6jzJK9rsgkjNs5hac8mMy6RRgESDyEECU6OStzKuVk30lwezXQ3NvpNN8Pte2h/bVYeuEX1zYYyb2zVbssBDljMWA+jszCEJ80xw7hv57Hp9gTCLzcPpBboqYA7+xfiqsjtc25FbEWYaG6oFBdiiuQyR7SCgcJS9LCgOHGfxfYMJ6WB2/a/X4AxRnJ9tgir3oLNdpL1KJ59l2KsIIt8ijP7TWRixqcldbn0jDGXBNvPv4C3QjuTqveJGAAAAAASUVORK5CYII=") !important;
 }
-
+.swal2-popup {
+  font-size: 1.5rem;
+}
 /*--------- Media queries --------*/
 @media only screen and (max-width: 991px) {
   .sidebar {

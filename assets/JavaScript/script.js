@@ -128,10 +128,11 @@ class App {
         if (
           !validInputs(distance, duration, cadence) ||
           !allPostive(distance, duration, cadence)
-        )
-          return alert("Please enter valid inputs");
-
-        workout = new Running(clickedCoords, distance, duration, cadence);
+        ) {
+          this._errorNotification("Please enter valid inputs");
+        } else {
+          workout = new Running(clickedCoords, distance, duration, cadence);
+        }
       }
       //If workout cycling, create the cycling object
       if (type === "cycling") {
@@ -140,10 +141,11 @@ class App {
         if (
           !validInputs(distance, duration, elevation) ||
           !allPostive(distance, duration, elevation)
-        )
-          return alert("Please enter valid inputs");
-
-        workout = new Cycling(clickedCoords, distance, duration, elevation);
+        ) {
+          this._errorNotification("Please enter valid inputs");
+        } else {
+          workout = new Cycling(clickedCoords, distance, duration, elevation);
+        }
       }
       //Add new object to workout array
       this.#workouts.push(workout);
@@ -206,8 +208,8 @@ class App {
       hideMethod: "fadeOut",
     };
   }
-  _errorNotification() {
-    toastr["error"]("Workout has deleted!");
+  _errorNotification(message) {
+    toastr["error"](message);
     toastr.options = {
       closeButton: false,
       debug: false,
@@ -320,8 +322,8 @@ class App {
     workoutElement.remove();
     //Remove workout marker on the map
     this._removeWorkoutMarker(workoutId);
-
-    this._errorNotification();
+    //Toastr Error notification
+    this._errorNotification("Workout has removed!");
     //Update changes in local storage
     this._setLocalStorage();
     //Delete all button visibility
