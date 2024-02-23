@@ -1,0 +1,13 @@
+.form__input {
+    width: 100%;
+    padding: 0.3rem 1rem;
+    font-family: inherit;
+    font-size: 1.4rem;
+    border-radius: 3px;
+    background-color: $color-light--3;
+    transition: all 0.2s;
+
+    &:focus {
+        background-color: #fff;
+    }
+}

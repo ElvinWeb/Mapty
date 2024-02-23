@@ -1,0 +1,39 @@
+.workout__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    .workout__delete--btn {
+        color: $color-brand--3;
+    }
+
+    .workout__edit--btn {
+        color: $color-brand--1;
+    }
+
+    >* {
+
+        font-size: 1.7rem;
+        transition: all 0.2s ease;
+
+        &:hover {
+
+            transform: scale(1.1);
+        }
+    }
+}
+
+.delete__all {
+    margin-bottom: 1rem;
+    padding: 1.1rem 2rem;
+    align-self: flex-start;
+    border-radius: 5px;
+}
+
+.delete__all--btn {
+    background-color: $color-brand--3;
+    font-size: 1.5rem;
+    color: $color-light--2;
+    font-weight: 600;
+}

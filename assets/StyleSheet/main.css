@@ -31,3 +31,238 @@ a:link,
 a:visited {
   color: #ffb545;
 }
+
+.logo {
+  height: 5.2rem;
+  align-self: center;
+  margin-bottom: 3rem;
+}
+
+.swal2-popup {
+  font-size: 1.5rem;
+}
+
+.workout__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.workout__buttons .workout__delete--btn {
+  color: #fe0000;
+}
+.workout__buttons .workout__edit--btn {
+  color: #ffb545;
+}
+.workout__buttons > * {
+  font-size: 1.7rem;
+  transition: all 0.2s ease;
+}
+.workout__buttons > *:hover {
+  transform: scale(1.1);
+}
+
+.delete__all {
+  margin-bottom: 1rem;
+  padding: 1.1rem 2rem;
+  align-self: flex-start;
+  border-radius: 5px;
+}
+
+.delete__all--btn {
+  background-color: #fe0000;
+  font-size: 1.5rem;
+  color: #ececec;
+  font-weight: 600;
+}
+
+@keyframes leafanim {
+  50% {
+    filter: hue-rotate(312deg) saturate(1.2);
+  }
+}
+.copyright {
+  position: absolute;
+  bottom: 20px;
+  right: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #aaa;
+  margin-bottom: 30px;
+}
+.copyright .link:link,
+.copyright .link:visited {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copyright .api__logo {
+  transition: 0.7s all;
+  animation: leafanim 3s ease 3s 1 normal none;
+  width: 80px;
+}
+.copyright .api__logo:hover, .copyright .api__logo:focus {
+  filter: hue-rotate(-70deg) saturate(1.5);
+}
+
+.form {
+  background-color: #42484d;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 5px;
+  padding: 1.5rem 2.75rem;
+  margin-bottom: 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 2.5rem;
+  height: 9.25rem;
+  transition: all 0.5s, transform 1ms;
+}
+.form.hidden {
+  transform: translateY(-30rem);
+  height: 0;
+  padding: 0 2.25rem;
+  margin-bottom: 0;
+  opacity: 0;
+}
+.form .form__row {
+  display: flex;
+  align-items: center;
+}
+.form .form__row .form__label {
+  flex: 0 0 50%;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.form .form__row--hidden {
+  display: none;
+}
+.form .form__btn {
+  display: none;
+}
+
+.form__input {
+  width: 100%;
+  padding: 0.3rem 1rem;
+  font-family: inherit;
+  font-size: 1.4rem;
+  border-radius: 3px;
+  background-color: rgb(214, 222, 224);
+  transition: all 0.2s;
+}
+.form__input:focus {
+  background-color: #fff;
+}
+
+#map {
+  flex: 1;
+  height: 100%;
+  background-color: #aaa;
+}
+
+.workouts {
+  list-style: none;
+  height: 77vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.workouts::-webkit-scrollbar {
+  width: 0;
+}
+.workouts .workout--running {
+  border-left: 5px solid #00c46a;
+}
+.workouts .workout--cycling {
+  border-left: 5px solid #ffb545;
+}
+.workouts .workout {
+  position: relative;
+  background-color: #42484d;
+  border-radius: 5px;
+  padding: 1.5rem 2.25rem;
+  margin: 2rem 0;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  z-index: 10;
+}
+.workouts .workout:hover {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15;
+  transform: translateY(-5px);
+}
+.workouts .workout .workout__title {
+  font-size: 1.7rem;
+  font-weight: 600;
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.workouts .workout .workout__details {
+  display: flex;
+  align-items: baseline;
+}
+.workouts .workout .workout__details .workout__icon {
+  font-size: 1.8rem;
+  margin-right: 0.2rem;
+  height: 0.28rem;
+}
+.workouts .workout .workout__details .workout__value {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+.workouts .workout .workout__details .workout__unit {
+  font-size: 1.1rem;
+  color: var(--color-light--1);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.workout__header {
+  display: grid;
+}
+
+.leaflet-popup .leaflet-popup-content-wrapper {
+  background-color: #2d3439;
+  color: #ececec;
+  border-radius: 5px;
+  padding-right: 0.6rem;
+}
+
+.leaflet-popup .leaflet-popup-content {
+  font-size: 1.5rem;
+}
+
+.leaflet-popup .leaflet-popup-tip {
+  background-color: #2d3439;
+}
+
+.running-popup .leaflet-popup-content-wrapper {
+  border-left: 5px solid var #00c46a;
+}
+
+.cycling-popup .leaflet-popup-content-wrapper {
+  border-left: 5px solid var #ffb545;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  position: relative;
+}
+.wrapper .sidebar {
+  position: relative;
+  flex-basis: 61rem;
+  background-color: #2d3439;
+  padding: 3rem 5rem 2rem 5rem;
+  display: flex;
+  flex-direction: column;
+}

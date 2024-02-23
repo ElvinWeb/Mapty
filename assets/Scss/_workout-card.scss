@@ -1,0 +1,81 @@
+.workouts {
+    list-style: none;
+    height: 77vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 0;
+    }
+
+    .workout--running {
+        border-left: 5px solid $color-brand--2;
+    }
+
+    .workout--cycling {
+        border-left: 5px solid $color-brand--1;
+    }
+
+    .workout {
+        position: relative;
+        background-color: $color-dark--2;
+        border-radius: 5px;
+        padding: 1.5rem 2.25rem;
+        margin: 2rem 0;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 0.75rem 1.5rem;
+        transition: all 0.2s ease;
+        box-shadow: $box-shadow-1;
+        z-index: 10;
+
+        &:hover {
+            box-shadow: $box-shadow-3;
+            transform: translateY(-5px);
+        }
+
+        .workout__title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .workout__details {
+            display: flex;
+            align-items: baseline;
+
+            .workout__icon {
+                font-size: 1.8rem;
+                margin-right: 0.2rem;
+                height: 0.28rem;
+            }
+
+            .workout__value {
+                font-size: 1.5rem;
+                margin-right: 0.5rem;
+            }
+
+            .workout__unit {
+                font-size: 1.1rem;
+                color: var(--color-light--1);
+                text-transform: uppercase;
+                font-weight: 800;
+            }
+        }
+    }
+
+}
+
+
+
+
+
+
+
+.workout__header {
+    display: grid;
+}
