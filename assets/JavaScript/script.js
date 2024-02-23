@@ -279,7 +279,9 @@ class App {
       workoutHtml += `
           <div class="workout__details">
             <span class="workout__icon">⚡️</span>
-            <span class="workout__value">${workout.pace.toFixed(1)}</span>
+            <span class="workout__value">${
+              workout.pace === undefined ? " " : workout.pace.toFixed(1)
+            }</span>
             <span class="workout__unit">min/km</span>
           </div>
           <div class="workout__details">
@@ -412,12 +414,11 @@ class App {
     this.#editWorkout = wantedWorkout;
 
     //Show the form
-    form.classList.remove("hidden");
-    inputDistance.focus();
+    this._showForm();
   }
   _updateWorkout() {
     if (!this.#editWorkout) {
-      alert("No workout to update.");
+      this._errorNotification("No workout to update.");
       return;
     }
 
