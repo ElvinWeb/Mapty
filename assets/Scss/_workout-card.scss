@@ -39,14 +39,11 @@
             font-size: 1.7rem;
             font-weight: 600;
             grid-column: 1 / -1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            @include flex(center, space-between);
         }
 
         .workout__details {
-            display: flex;
-            align-items: baseline;
+            @include flex(baseline, null);
 
             .workout__icon {
                 font-size: 1.8rem;
@@ -61,7 +58,7 @@
 
             .workout__unit {
                 font-size: 1.1rem;
-                color: var(--color-light--1);
+                color: $color-light--1;
                 text-transform: uppercase;
                 font-weight: 800;
             }
@@ -69,12 +66,6 @@
     }
 
 }
-
-
-
-
-
-
 
 .workout__header {
     display: grid;

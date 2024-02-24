@@ -1,16 +1,15 @@
 .wrapper {
-    width: 100%;
+    position: relative;
     display: flex;
     flex-direction: row;
+    width: 100%;
     box-shadow: $box-shadow-2;
-    position: relative;
 
     .sidebar {
-        position: relative;
+        display: flex;
         flex-basis: 61rem;
+        flex-direction: column;
         background-color: $color-dark--1;
         padding: 3rem 5rem 2rem 5rem;
-        display: flex;
-        flex-direction: column;
     }
 }

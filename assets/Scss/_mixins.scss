@@ -1,0 +1,17 @@
+@mixin flex($align, $justify) {
+    display: flex;
+
+    @if $align==null {
+        justify-content: $justify;
+    }@else {
+        align-items: $align;
+        justify-content: $justify;
+    }
+
+    @if $justify==null {
+        align-items: $align;
+    }@else {
+        align-items: $align;
+        justify-content: $justify;
+    }
+}

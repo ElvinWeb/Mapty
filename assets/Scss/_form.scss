@@ -19,8 +19,7 @@
     }
 
     .form__row {
-        display: flex;
-        align-items: center;
+        @include flex(center, null);
 
         .form__label {
             flex: 0 0 50%;

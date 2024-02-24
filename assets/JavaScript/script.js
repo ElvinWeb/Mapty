@@ -1,6 +1,7 @@
 "use strict";
 
 const form = document.querySelector(".form");
+const loading = document.querySelector(".loading");
 const containerWorkouts = document.querySelector(".workouts");
 const deleteAllButton = document.querySelector(".delete__all--btn");
 const inputType = document.querySelector(".form__input--type");
@@ -51,6 +52,7 @@ class App {
     );
   }
   _getPosition() {
+    loading.style.display = "grid";
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         this._loadMap.bind(this),
@@ -76,6 +78,7 @@ class App {
         }
       );
     }
+    loading.style.display = "none";
   }
   _loadMap(position) {
     const { latitude, longitude } = position.coords;
@@ -109,7 +112,7 @@ class App {
     //Helper functions
     const validInputs = (...inputs) =>
       inputs.every((inp) => Number.isFinite(inp));
-    const allPostive = (...inputs) => inputs.every((inp) => inp >= 0);
+    const allPostive = (...inputs) => inputs.every((inp) => inp > 0);
 
     if (this.#editWorkout) {
       this._updateWorkout();
@@ -130,6 +133,7 @@ class App {
           !allPostive(distance, duration, cadence)
         ) {
           this._errorNotification("Please enter valid inputs");
+          return;
         } else {
           workout = new Running(clickedCoords, distance, duration, cadence);
         }
@@ -143,6 +147,7 @@ class App {
           !allPostive(distance, duration, elevation)
         ) {
           this._errorNotification("Please enter valid inputs");
+          return;
         } else {
           workout = new Cycling(clickedCoords, distance, duration, elevation);
         }
@@ -392,6 +397,7 @@ class App {
     );
     const wantedWorkout = this.#workouts[wantedIndex];
 
+    //Rendering the updated workout from values
     inputType.value = wantedWorkout.type;
     inputDistance.value = wantedWorkout.distance;
     inputDuration.value = wantedWorkout.duration;

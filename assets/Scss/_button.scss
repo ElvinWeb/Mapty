@@ -1,7 +1,5 @@
 .workout__buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flex(center, center);
     gap: 12px;
 
     .workout__delete--btn {
@@ -18,7 +16,6 @@
         transition: all 0.2s ease;
 
         &:hover {
-
             transform: scale(1.1);
         }
     }

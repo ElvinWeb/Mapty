@@ -1,0 +1,15 @@
+@keyframes loading {
+    0% {
+        transform: translateY(-50%) rotate(0);
+    }
+
+    100% {
+        transform: translateY(-50%) rotate(1turn);
+    }
+}
+
+@keyframes leafanim {
+    50% {
+        filter: hue-rotate(312deg) saturate(1.2);
+    }
+}

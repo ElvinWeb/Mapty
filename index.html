@@ -4,28 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!------- favicon ------->
     <link
       rel="shortcut icon"
       type="image/png"
       href="./assets/images/icon.png"
     />
+    <!------ Leaflet css link ------>
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
-
+    <!------ Google-Font css link ------>
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <!------ Font-Awesome css link ------>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+    <!------ SweetAlert2 css link ------>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css"
     />
+    <!------ Toastr css link ------>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
@@ -34,11 +39,13 @@
     <title>Mapty // Map your workouts</title>
   </head>
   <body>
+    <!----- App Wrapper ----->
     <section class="wrapper">
       <div class="sidebar">
         <img src="./assets/images/logo.png" alt="Logo" class="logo" />
         <button class="delete__all delete__all--btn">Delete All</button>
         <ul class="workouts">
+          <!------ Form ------->
           <form class="form hidden">
             <div class="form__row">
               <label class="form__label">Type</label>
@@ -85,23 +92,29 @@
             </div>
             <button class="form__btn">OK</button>
           </form>
-
           <!-- Workout list items placed here -->
         </ul>
-        <hr />
-        <p class="copyright">
+
+        <p class="footer">
           Powered by
           <a class="link" target="_blank" href="https://leafletjs.com/">
             <img class="api__logo" src="./assets/images/api_logo.png" alt=""
           /></a>
         </p>
       </div>
+      <div class="loading" data-loading></div>
+      <!------ Map ------>
       <div id="map"></div>
     </section>
+    <!------ Jquery cdn link ------>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!------ Leaflet js cdn link ------>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!------ Script js link ------>
     <script src="./assets/JavaScript/script.js"></script>
+    <!------ Sweetalert2 js cdn link ------>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
+    <!------ Toastr js cdn link ------>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   </body>
 </html>
