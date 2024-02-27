@@ -256,7 +256,7 @@ class App {
     let workoutHtml = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
         <div class="workout__title">
-          <h4 class="workout__head">${workout.description}</h4>
+          <h4 class="workout__head">${workout.location}</h4>
           <div class="workout__buttons">
               <button class="workout__edit">
                 <i class="fa-solid fa-pen-to-square workout__edit--btn"></i>
@@ -506,7 +506,6 @@ class App {
   }
 }
 class Workout {
-  #api_key = "df6862e91d0eedbace79be57aa8f159f";
   date = new Date();
   id = (Date.now() + "").slice(-10);
 
@@ -527,20 +526,6 @@ class Workout {
 
     return this.description;
   }
-  _getLocation() {
-    let api_url = "http://api.positionstack.com/v1/reverse";
-    let strCoords = `${this.coords[0]},${this.coords[1]}`;
-    let request_url = `${api_url}?access_key=${
-      this.#api_key
-    }&query=${strCoords}`;
-
-    fetch(request_url)
-      .then((res) => res.json())
-      .then((data) => {
-        this.locationName = data.data[0].name;
-      });
-    return this.locationName;
-  }
 }
 class Cycling extends Workout {
   type = "cycling";
@@ -549,7 +534,6 @@ class Cycling extends Workout {
     this.elevationGain = elevationGain;
     this.calcSpeed();
     this._setDescription();
-    this._getLocation();
   }
 
   calcSpeed() {
@@ -564,7 +548,6 @@ class Running extends Workout {
     this.cadence = cadence;
     this.calcPace();
     this._setDescription();
-    this._getLocation();
   }
 
   calcPace() {
