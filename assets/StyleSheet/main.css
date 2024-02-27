@@ -201,6 +201,7 @@ a:visited {
   height: 77vh;
   overflow-y: scroll;
   overflow-x: hidden;
+  padding: 0;
 }
 .workouts::-webkit-scrollbar {
   width: 0;

@@ -116,7 +116,7 @@ class App {
 
     if (this.#editWorkout) {
       this._updateWorkout();
-      this._infoNotification();
+      this._infoNotification("Workout has updated successfully!");
     } else {
       //Get data from the form
       const type = inputType.value;
@@ -164,7 +164,7 @@ class App {
       //Clear input fields and hide form
       this._hideForm();
 
-      this._successNotification();
+      this._successNotification("New Workout has created successfully!");
 
       //Set local storage to all workouts
       this._setLocalStorage();
@@ -173,8 +173,8 @@ class App {
       this._deleteAllButtonVisibility();
     }
   }
-  _successNotification() {
-    toastr["success"]("New Workout has been created successfully");
+  _successNotification(message) {
+    toastr["success"](message);
     toastr.options = {
       closeButton: false,
       debug: false,
@@ -193,8 +193,8 @@ class App {
       hideMethod: "fadeOut",
     };
   }
-  _infoNotification() {
-    toastr["info"]("Workout has updated!");
+  _infoNotification(message) {
+    toastr["info"](message);
     toastr.options = {
       closeButton: false,
       debug: false,
@@ -346,36 +346,32 @@ class App {
     }
   }
   _removeAllWorkouts() {
-    Swal.fire({
+    $.confirm({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete all!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        //Clear the workouts array
-        this.#workouts = [];
-        //Remove all workout markers on the map
-        for (const id in this.workoutMarkers) {
-          this._removeWorkoutMarker(id);
-        }
-        //Remove all workout elements from the UI
-        const workoutElements = document.querySelectorAll(".workout");
-        workoutElements.forEach((workout) => workout.remove());
-        //Clear the local storage
-        this._setLocalStorage();
-        //Point Delete all button visibility
-        this._deleteAllButtonVisibility();
-
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your all workouts has been deleted.",
-          icon: "success",
-        });
-      }
+      columnClass: "col-md-4 col-md-offset-4",
+      animation: "zoom",
+      closeAnimation: "scale",
+      content: false,
+      draggable: false,
+      theme: "dark",
+      buttons: {
+        confirm: function () {
+          //Clear the workouts array
+          this.#workouts = [];
+          //Remove all workout markers on the map
+          for (const id in this.workoutMarkers) {
+            this._removeWorkoutMarker(id);
+          }
+          //Remove all workout elements from the UI
+          const workoutElements = document.querySelectorAll(".workout");
+          workoutElements.forEach((workout) => workout.remove());
+          //Clear the local storage
+          this._setLocalStorage();
+          //Point Delete all button visibility
+          this._deleteAllButtonVisibility();
+        }.bind(this),
+        cancel: function () {}.bind(this),
+      },
     });
   }
   _deleteAllButtonVisibility() {
