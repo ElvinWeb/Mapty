@@ -15,6 +15,16 @@
         height: 17rem;
     }
 
+    @include md {
+        grid-template-columns: 1fr 1fr;
+        height: 10rem;
+    }
+
+    @include sm {
+        grid-template-columns: 1fr;
+        height: 17rem;
+    }
+
     &.hidden {
         transform: translateY(-30rem);
         height: 0;
@@ -26,7 +36,12 @@
     .form__row {
         @include flex(center, null);
 
+
         .form__label {
+            @include lg {
+                flex: 0 0 35%;
+            }
+
             flex: 0 0 50%;
             font-size: 1.5rem;
             font-weight: 600;

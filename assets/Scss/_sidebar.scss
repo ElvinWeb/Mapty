@@ -4,9 +4,9 @@
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 
-    // @include md {
-    //     flex-direction: column;
-    // }
+    @include md {
+        flex-direction: column;
+    }
 
 
     .sidebar {
@@ -15,10 +15,10 @@
         background-color: $color-dark--1;
         padding: 3rem 5rem 2rem 5rem;
         box-shadow: $box-shadow-2;
-        width: 200px;
 
         @include md {
-
+            flex-basis: 34rem !important;
+            height: 0;
         }
 
         @include xl {

@@ -34,7 +34,19 @@
         z-index: 10;
 
         @include xl {
-            grid-template-columns: 2fr 2fr;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @include lg {
+            grid-template-columns: 1fr;
+        }
+
+        @include md {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        @include sm {
+            grid-template-columns: 1fr 1fr;
         }
 
 
@@ -47,6 +59,7 @@
             font-size: 1.7rem;
             font-weight: 600;
             grid-column: 1 / -1;
+            margin-bottom: 0;
             @include flex(center, space-between);
         }
 

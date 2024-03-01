@@ -1,13 +1,4 @@
-.toast_container {
-    padding: 3rem;
-    margin: 0 auto;
-    width: 700px;
-    height: 500px;
-    background-color: #eff2fb;
-}
-
 h1 {
-
     @include flex(center, center);
     font-weight: 600;
     font-size: 2rem;
@@ -75,6 +66,10 @@ h1 {
     background-color: #edf1fd;
     color: #01081e !important;
     border-color: transparent !important;
+
+    @include md {
+        width: 200px !important;
+    }
 }
 
 .closebtn {

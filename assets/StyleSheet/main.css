@@ -150,6 +150,18 @@ a:visited {
     height: 17rem;
   }
 }
+@media only screen and (max-width: 768px) {
+  .form {
+    grid-template-columns: 1fr 1fr;
+    height: 10rem;
+  }
+}
+@media only screen and (max-width: 576px) {
+  .form {
+    grid-template-columns: 1fr;
+    height: 17rem;
+  }
+}
 .form.hidden {
   transform: translateY(-30rem);
   height: 0;
@@ -166,6 +178,11 @@ a:visited {
   flex: 0 0 50%;
   font-size: 1.5rem;
   font-weight: 600;
+}
+@media only screen and (max-width: 992px) {
+  .form .form__row .form__label {
+    flex: 0 0 35%;
+  }
 }
 .form .form__row--hidden {
   display: none;
@@ -226,7 +243,22 @@ a:visited {
 }
 @media only screen and (max-width: 1200px) {
   .workouts .workout {
-    grid-template-columns: 2fr 2fr;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media only screen and (max-width: 992px) {
+  .workouts .workout {
+    grid-template-columns: 1fr;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .workouts .workout {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+@media only screen and (max-width: 576px) {
+  .workouts .workout {
+    grid-template-columns: 1fr 1fr;
   }
 }
 .workouts .workout:hover {
@@ -237,6 +269,7 @@ a:visited {
   font-size: 1.7rem;
   font-weight: 600;
   grid-column: 1/-1;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -292,6 +325,11 @@ a:visited {
   width: 100%;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 }
+@media only screen and (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+  }
+}
 .wrapper .sidebar {
   display: flex;
   flex-direction: column;
@@ -299,7 +337,12 @@ a:visited {
   background-color: #2d3439;
   padding: 3rem 5rem 2rem 5rem;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
-  width: 200px;
+}
+@media only screen and (max-width: 768px) {
+  .wrapper .sidebar {
+    flex-basis: 34rem !important;
+    height: 0;
+  }
 }
 @media only screen and (max-width: 1200px) {
   .wrapper .sidebar {
@@ -310,14 +353,6 @@ a:visited {
   .wrapper .sidebar {
     flex-basis: 40rem;
   }
-}
-
-.toast_container {
-  padding: 3rem;
-  margin: 0 auto;
-  width: 700px;
-  height: 500px;
-  background-color: #eff2fb;
 }
 
 h1 {
@@ -397,6 +432,14 @@ h1 {
   background-color: #edf1fd;
   color: #01081e !important;
   border-color: transparent !important;
+}
+@media only screen and (max-width: 768px) {
+  .toast-success,
+  .toast-info,
+  .toast-warning,
+  .toast-error {
+    width: 200px !important;
+  }
 }
 
 .closebtn {
