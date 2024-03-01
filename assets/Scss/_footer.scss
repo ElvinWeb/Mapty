@@ -1,15 +1,10 @@
 .footer {
     @include flex(center, center);
+    // margin: 0 auto;
     gap: 5px;
     font-weight: 600;
     font-size: 1.3rem;
     color: $color-light--1;
-    margin-bottom: 30px;
-
-    .link:link,
-    .link:visited {
-        @include flex(center, center);
-    }
 
     .api__logo {
         transition: 0.7s all;

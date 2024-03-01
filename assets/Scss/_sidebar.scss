@@ -1,15 +1,32 @@
 .wrapper {
     position: relative;
-    display: flex;
-    flex-direction: row;
+    @include flex-direction(row);
     width: 100%;
-    box-shadow: $box-shadow-2;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+
+    // @include md {
+    //     flex-direction: column;
+    // }
+
 
     .sidebar {
-        display: flex;
-        flex-basis: 61rem;
-        flex-direction: column;
+        @include flex-direction(column);
+        flex-basis: 59rem;
         background-color: $color-dark--1;
         padding: 3rem 5rem 2rem 5rem;
+        box-shadow: $box-shadow-2;
+        width: 200px;
+
+        @include md {
+
+        }
+
+        @include xl {
+            flex-basis: 48rem;
+        }
+
+        @include lg {
+            flex-basis: 40rem;
+        }
     }
 }

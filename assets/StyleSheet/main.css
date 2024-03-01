@@ -122,15 +122,6 @@ a:visited {
   font-weight: 600;
   font-size: 1.3rem;
   color: #aaa;
-  margin-bottom: 30px;
-}
-.footer .link:link,
-.footer .link:visited {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-items: center;
-  justify-content: center;
 }
 .footer .api__logo {
   transition: 0.7s all;
@@ -152,6 +143,12 @@ a:visited {
   gap: 0.5rem 2.5rem;
   height: 9.25rem;
   transition: all 0.5s, transform 1ms;
+}
+@media only screen and (max-width: 992px) {
+  .form {
+    grid-template-columns: 1fr;
+    height: 17rem;
+  }
 }
 .form.hidden {
   transform: translateY(-30rem);
@@ -214,6 +211,7 @@ a:visited {
 }
 .workouts .workout {
   position: relative;
+  width: 100%;
   background-color: #42484d;
   border-radius: 5px;
   padding: 1.5rem 2.25rem;
@@ -225,6 +223,11 @@ a:visited {
   transition: all 0.2s ease;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   z-index: 10;
+}
+@media only screen and (max-width: 1200px) {
+  .workouts .workout {
+    grid-template-columns: 2fr 2fr;
+  }
 }
 .workouts .workout:hover {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15;
@@ -261,10 +264,6 @@ a:visited {
   font-weight: 800;
 }
 
-.workout__header {
-  display: grid;
-}
-
 .leaflet-popup .leaflet-popup-content-wrapper {
   background-color: #2d3439;
   color: #ececec;
@@ -279,11 +278,11 @@ a:visited {
 }
 
 .running-popup .leaflet-popup-content-wrapper {
-  border-left: 5px solid var #00c46a;
+  border-left: 5px solid #00c46a;
 }
 
 .cycling-popup .leaflet-popup-content-wrapper {
-  border-left: 5px solid var #ffb545;
+  border-left: 5px solid #ffb545;
 }
 
 .wrapper {
@@ -291,14 +290,26 @@ a:visited {
   display: flex;
   flex-direction: row;
   width: 100%;
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 }
 .wrapper .sidebar {
   display: flex;
-  flex-basis: 61rem;
   flex-direction: column;
+  flex-basis: 59rem;
   background-color: #2d3439;
   padding: 3rem 5rem 2rem 5rem;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  width: 200px;
+}
+@media only screen and (max-width: 1200px) {
+  .wrapper .sidebar {
+    flex-basis: 48rem;
+  }
+}
+@media only screen and (max-width: 992px) {
+  .wrapper .sidebar {
+    flex-basis: 40rem;
+  }
 }
 
 .toast_container {
@@ -363,8 +374,10 @@ h1 {
   margin: 3px;
   cursor: pointer;
 }
-
-p {
+#btnSuccess p,
+#btnInfo p,
+#btnWarning p,
+#btnError p {
   width: 400px;
   line-height: 1.5rem;
   text-align: center;

@@ -5,6 +5,7 @@
     overflow-x: hidden;
     padding: 0;
 
+
     &::-webkit-scrollbar {
         width: 0;
     }
@@ -19,6 +20,7 @@
 
     .workout {
         position: relative;
+        width: 100%;
         background-color: $color-dark--2;
         border-radius: 5px;
         padding: 1.5rem 2.25rem;
@@ -30,6 +32,11 @@
         transition: all 0.2s ease;
         box-shadow: $box-shadow-1;
         z-index: 10;
+
+        @include xl {
+            grid-template-columns: 2fr 2fr;
+        }
+
 
         &:hover {
             box-shadow: $box-shadow-3;
@@ -66,8 +73,4 @@
         }
     }
 
-}
-
-.workout__header {
-    display: grid;
 }

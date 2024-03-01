@@ -10,6 +10,11 @@
     height: 9.25rem;
     transition: all 0.5s, transform 1ms;
 
+    @include lg {
+        grid-template-columns: 1fr;
+        height: 17rem;
+    }
+
     &.hidden {
         transform: translateY(-30rem);
         height: 0;

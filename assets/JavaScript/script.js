@@ -27,12 +27,7 @@ class App {
     //Delete all button visibility
     this._deleteAllButtonVisibility();
     //Attach event handlers
-    form.addEventListener(
-      "submit",
-      function (e) {
-        this._newWorkout(e);
-      }.bind(this)
-    );
+    form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
     deleteAllButton.addEventListener(
       "click",
@@ -256,7 +251,7 @@ class App {
     let workoutHtml = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
         <div class="workout__title">
-          <h4 class="workout__head">${workout.location}</h4>
+          <h4 class="workout__head">${workout.description}</h4>
           <div class="workout__buttons">
               <button class="workout__edit">
                 <i class="fa-solid fa-pen-to-square workout__edit--btn"></i>
@@ -355,22 +350,30 @@ class App {
       draggable: false,
       theme: "dark",
       buttons: {
-        confirm: function () {
-          //Clear the workouts array
-          this.#workouts = [];
-          //Remove all workout markers on the map
-          for (const id in this.workoutMarkers) {
-            this._removeWorkoutMarker(id);
-          }
-          //Remove all workout elements from the UI
-          const workoutElements = document.querySelectorAll(".workout");
-          workoutElements.forEach((workout) => workout.remove());
-          //Clear the local storage
-          this._setLocalStorage();
-          //Point Delete all button visibility
-          this._deleteAllButtonVisibility();
-        }.bind(this),
-        cancel: function () {}.bind(this),
+        confirm: {
+          btnClass: "btn-success",
+          action: function () {
+            //Clear the workouts array
+            this.#workouts = [];
+            //Remove all workout markers on the map
+            for (const id in this.workoutMarkers) {
+              this._removeWorkoutMarker(id);
+            }
+            //Remove all workout elements from the UI
+            const workoutElements = document.querySelectorAll(".workout");
+            workoutElements.forEach((workout) => workout.remove());
+            //Clear the local storage
+            this._setLocalStorage();
+            //Point Delete all button visibility
+            this._deleteAllButtonVisibility();
+
+            this._errorNotification("All workouts have deleted!");
+          }.bind(this),
+        },
+        cancel: {
+          btnClass: "btn-danger",
+          action: function () {}.bind(this),
+        },
       },
     });
   }
