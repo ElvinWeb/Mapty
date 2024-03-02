@@ -31,7 +31,9 @@ class App {
     inputType.addEventListener("change", this._toggleElevationField);
     deleteAllButton.addEventListener(
       "click",
-      this._removeAllWorkouts.bind(this)
+      function () {
+        this._removeAllConfirmation();
+      }.bind(this)
     );
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
     containerWorkouts.addEventListener(
@@ -174,7 +176,7 @@ class App {
       closeButton: false,
       debug: false,
       newestOnTop: false,
-      progressBar: true,
+      progressBar: false,
       positionClass: "toast-top-right",
       preventDuplicates: false,
       onclick: null,
@@ -194,7 +196,7 @@ class App {
       closeButton: false,
       debug: false,
       newestOnTop: false,
-      progressBar: true,
+      progressBar: false,
       positionClass: "toast-top-right",
       preventDuplicates: false,
       onclick: null,
@@ -214,7 +216,7 @@ class App {
       closeButton: false,
       debug: false,
       newestOnTop: false,
-      progressBar: true,
+      progressBar: false,
       positionClass: "toast-top-right",
       preventDuplicates: false,
       onclick: null,
@@ -341,40 +343,38 @@ class App {
     }
   }
   _removeAllWorkouts() {
-    $.confirm({
+    //Clear the workouts array
+    this.#workouts = [];
+    //Remove all workout markers on the map
+    for (const id in this.workoutMarkers) {
+      this._removeWorkoutMarker(id);
+    }
+    //Remove all workout elements from the UI
+    const workoutElements = document.querySelectorAll(".workout");
+    workoutElements.forEach((workout) => workout.remove());
+    //Clear the local storage
+    this._setLocalStorage();
+    //Point Delete all button visibility
+    this._deleteAllButtonVisibility();
+  }
+  _removeAllConfirmation() {
+    Swal.fire({
       title: "Are you sure?",
-      columnClass: "col-md-4 col-md-offset-4",
-      animation: "zoom",
-      closeAnimation: "scale",
-      content: false,
-      draggable: false,
-      theme: "dark",
-      buttons: {
-        confirm: {
-          btnClass: "btn-success",
-          action: function () {
-            //Clear the workouts array
-            this.#workouts = [];
-            //Remove all workout markers on the map
-            for (const id in this.workoutMarkers) {
-              this._removeWorkoutMarker(id);
-            }
-            //Remove all workout elements from the UI
-            const workoutElements = document.querySelectorAll(".workout");
-            workoutElements.forEach((workout) => workout.remove());
-            //Clear the local storage
-            this._setLocalStorage();
-            //Point Delete all button visibility
-            this._deleteAllButtonVisibility();
-
-            this._errorNotification("All workouts have deleted!");
-          }.bind(this),
-        },
-        cancel: {
-          btnClass: "btn-danger",
-          action: function () {}.bind(this),
-        },
-      },
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._removeAllWorkouts();
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your workouts has deleted.",
+          icon: "success",
+        });
+      }
     });
   }
   _deleteAllButtonVisibility() {
