@@ -1,1 +1,1 @@
-<h3>#Mapty App</h3>
+### Mapty App | Map you workouts on map
